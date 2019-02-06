@@ -142,6 +142,7 @@ func (r *ReconcileWorkflow) Reconcile(request reconcile.Request) (reconcile.Resu
 						}
 					}
 				}()
+
 				r.applicator.DeleteWorkflowWithHieraData(workflowName, data)
 			}()
 			if requeue {

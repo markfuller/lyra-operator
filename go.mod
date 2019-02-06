@@ -2,6 +2,7 @@ module github.com/lyraproj/lyra-operator
 
 require (
 	github.com/appscode/jsonpatch v0.0.0-20190108182946-7c0e3b262f30 // indirect
+	github.com/davecgh/go-spew v1.1.1
 	github.com/evanphx/json-patch v4.1.0+incompatible // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-logr/logr v0.1.0 // indirect
@@ -42,7 +43,7 @@ require (
 	k8s.io/api v0.0.0-20181221193117-173ce66c1e39
 	k8s.io/apiextensions-apiserver v0.0.0-20190103235604-e7617803aceb // indirect
 	k8s.io/apimachinery v0.0.0-20190126155707-0e6dcdd1b5ce
-	k8s.io/client-go v10.0.0+incompatible // indirect
+	k8s.io/client-go v10.0.0+incompatible
 	k8s.io/klog v0.1.0 // indirect
 	k8s.io/kube-openapi v0.0.0-20181114233023-0317810137be // indirect
 	sigs.k8s.io/controller-runtime v0.1.10

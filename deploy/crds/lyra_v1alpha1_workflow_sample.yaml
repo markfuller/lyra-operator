@@ -5,7 +5,6 @@ metadata:
 spec:
   workflowName: "sample2"
   data:
-    foo: kubeFooooo
-    bar: kubeBaaaar
-    baz: kubeBaaaaz
+    aws.tags.created-by: user@company.com
+    aws.tags.lifetime: 3hr
   refreshTime: 10
