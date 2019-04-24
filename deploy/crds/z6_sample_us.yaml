@@ -1,0 +1,8 @@
+apiVersion: lyra.example.com/v1alpha1
+kind: UserScript
+metadata:
+  name: our-us
+spec:
+  scriptName: ./sayHello.sh
+  # scriptName: ls
+

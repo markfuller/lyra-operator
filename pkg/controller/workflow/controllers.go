@@ -17,20 +17,14 @@ func AddLB(mgr manager.Manager, applicator Applicator) error {
 
 	return addWatches(
 		mgr,
-		newReconciler(mgr, applicator),
+		&ReconcileLoadBalancer{
+			client: mgr.GetClient(),
+			scheme: mgr.GetScheme(),
+		},
 		"loadbalancer-controller",
 		&lyrav1alpha1.LoadBalancer{},
 		&lyrav1alpha1.WebServer{},
 	)
-}
-
-// newReconciler returns a new reconcile.Reconciler
-func newReconcilerLB(mgr manager.Manager, applicator Applicator) reconcile.Reconciler {
-	return &ReconcileLoadBalancer{
-		client: mgr.GetClient(),
-		scheme: mgr.GetScheme(),
-		// applicator: applicator,
-	}
 }
 
 //ReconcileLoadBalancer .

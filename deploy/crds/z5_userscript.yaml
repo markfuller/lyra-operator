@@ -1,0 +1,22 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: userscripts.lyra.example.com
+spec:
+  group: lyra.example.com
+  names:
+    kind: UserScript
+    listKind: UserScriptList
+    plural: userscripts
+    singular: userscript
+    shortNames:
+    - us
+  scope: Namespaced
+  version: v1alpha1
+  subresources:
+    status: {}
+  additionalPrinterColumns:
+      - name: UserScriptName
+        type: string
+        description: The name of the userscript
+        JSONPath: .spec.ScriptName

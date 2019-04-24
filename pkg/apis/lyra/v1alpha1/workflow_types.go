@@ -69,11 +69,13 @@ type WorkflowList struct {
 	Items           []Workflow `json:"items"`
 }
 
+// WebServerSpec .
 type WebServerSpec struct {
 	WebServerName string `json:"webServerName"`
 	WebServerID   string `json:"webServerId"`
 }
 
+// WebServerStatus .
 type WebServerStatus struct {
 	Status string
 }
@@ -98,12 +100,14 @@ type WebServerList struct {
 	Items           []WebServer `json:"items"`
 }
 
+// LoadBalancerSpec .
 type LoadBalancerSpec struct {
 	LoadBalancerName string `json:"loadBalancerName"`
 	LoadBalancerID   string `json:"loadBalancerId"`
 	WebServerID      string `json:"webServerId"`
 }
 
+// LoadBalancerStatus .
 type LoadBalancerStatus struct {
 	Status string
 }
@@ -128,8 +132,39 @@ type LoadBalancerList struct {
 	Items           []LoadBalancer `json:"items"`
 }
 
+// UserScriptSpec .
+type UserScriptSpec struct {
+	ScriptName string `json:"scriptName"`
+}
+
+// UserScriptStatus .
+type UserScriptStatus struct {
+	Status string
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// UserScript is the Schema for the loadbalancers API
+// +k8s:openapi-gen=true
+type UserScript struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+	Spec              UserScriptSpec   `json:"spec,omitempty"`
+	Status            UserScriptStatus `json:"status,omitempty"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// UserScriptList contains a list of UserScript
+type UserScriptList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []UserScript `json:"items"`
+}
+
 func init() {
 	SchemeBuilder.Register(&Workflow{}, &WorkflowList{})
 	SchemeBuilder.Register(&WebServer{}, &WebServerList{})
 	SchemeBuilder.Register(&LoadBalancer{}, &LoadBalancerList{})
+	SchemeBuilder.Register(&UserScript{}, &UserScriptList{})
 }

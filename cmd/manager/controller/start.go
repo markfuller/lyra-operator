@@ -59,6 +59,11 @@ func Start(namespace string, applicator workflow.Applicator) error {
 		log.Error(err, "failed to setup loadbalancer controller")
 	}
 
+	if err := workflow.AddUS(mgr, applicator); err != nil {
+		//only log the error so that we can continue if the kind is not found (i.e. if we haven't created the CRD in kube yet)
+		log.Error(err, "failed to setup loadbalancer controller")
+	}
+
 	// Start the Cmd
 	if err := mgr.Start(signals.SetupSignalHandler()); err != nil {
 		return fmt.Errorf("failed to start manager: %v", err)
