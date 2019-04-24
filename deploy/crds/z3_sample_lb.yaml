@@ -1,0 +1,6 @@
+apiVersion: lyra.example.com/v1alpha1
+kind: LoadBalancer
+metadata:
+  name: our-lb
+spec:
+  loadBalancerName: yadayadayada

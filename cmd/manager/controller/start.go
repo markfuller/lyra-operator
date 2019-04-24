@@ -4,17 +4,20 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/operator-framework/operator-sdk/pkg/leader"
-	"github.com/operator-framework/operator-sdk/pkg/ready"
 	"github.com/lyraproj/lyra-operator/pkg/apis"
 	"github.com/lyraproj/lyra-operator/pkg/controller/workflow"
+	"github.com/operator-framework/operator-sdk/pkg/leader"
+	"github.com/operator-framework/operator-sdk/pkg/ready"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
+	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 	"sigs.k8s.io/controller-runtime/pkg/runtime/signals"
 )
 
 // Start the Kubernetes controller running
 func Start(namespace string, applicator workflow.Applicator) error {
+
+	var log = logf.Log.WithName("start.controllers")
 
 	// Get a config to talk to the apiserver
 	cfg, err := config.GetConfig()
@@ -43,13 +46,24 @@ func Start(namespace string, applicator workflow.Applicator) error {
 		return fmt.Errorf("failed to add scheme: %v", err)
 	}
 
-	// Setup all Controllers
-	workflow.Add(mgr, applicator)
+	// set up workflow controller
+	if err := workflow.Add(mgr, applicator); err != nil {
+		//only log the error so that we can continue if the kind is not found (i.e. if we haven't created the CRD in kube yet)
+		log.Error(err, "failed to setup workflow controller")
+	}
+
+	// set up load balancer controller
+	// TODO markf refactor signatures (e.g. wrong package here) if it eventually works
+	if err := workflow.AddLB(mgr, applicator); err != nil {
+		//only log the error so that we can continue if the kind is not found (i.e. if we haven't created the CRD in kube yet)
+		log.Error(err, "failed to setup loadbalancer controller")
+	}
 
 	// Start the Cmd
 	if err := mgr.Start(signals.SetupSignalHandler()); err != nil {
 		return fmt.Errorf("failed to start manager: %v", err)
 	}
 
+	log.Info("Completed controller setup")
 	return nil
 }

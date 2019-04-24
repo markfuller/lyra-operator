@@ -1,0 +1,6 @@
+apiVersion: lyra.example.com/v1alpha1
+kind: WebServer
+metadata:
+  name: our-ws
+spec:
+  webServerName: nananana

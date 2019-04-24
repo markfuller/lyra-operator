@@ -1,0 +1,30 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: loadbalancers.lyra.example.com
+spec:
+  group: lyra.example.com
+  names:
+    kind: LoadBalancer
+    listKind: LoadBalancerList
+    plural: loadbalancers
+    singular: loadbalancer
+    shortNames:
+    - lb
+  scope: Namespaced
+  version: v1alpha1
+  subresources:
+    status: {}
+  additionalPrinterColumns:
+      - name: LBName
+        type: string
+        description: The name of the load balancer
+        JSONPath: .spec.loadBalancerName
+      - name: LoadBalancerID
+        type: string
+        description: The ID of the load balancer
+        JSONPath: .spec.loadBalancerId
+      - name: WebServerId
+        type: string
+        description: The ID of the web server
+        JSONPath: .spec.webServerId

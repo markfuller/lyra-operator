@@ -38,7 +38,15 @@ type Applicator interface {
 // Add creates a new Workflow Controller and adds it to the Manager. The Manager will set fields on the Controller
 // and Start it when the Manager is Started.
 func Add(mgr manager.Manager, applicator Applicator) error {
-	return add(mgr, newReconciler(mgr, applicator))
+
+	return addWatches(
+		mgr,
+		newReconciler(mgr, applicator),
+		"workflow-controller",
+		&lyrav1alpha1.Workflow{},
+		&corev1.Pod{},
+	)
+
 }
 
 // newReconciler returns a new reconcile.Reconciler
@@ -50,25 +58,34 @@ func newReconciler(mgr manager.Manager, applicator Applicator) reconcile.Reconci
 	}
 }
 
-// add adds a new Controller to mgr with r as the reconcile.Reconciler
-func add(mgr manager.Manager, r reconcile.Reconciler) error {
+// addWatches adds a new Controller to mgr with r as the reconcile.Reconciler (handling reconcile events)
+// it watches the runtimeObject and (TODO: fails to watch) the relatedObject
+func addWatches(mgr manager.Manager,
+	r reconcile.Reconciler,
+	controllerName string,
+	runtimeObject runtime.Object,
+	relatedObject runtime.Object) error {
+
 	// Create a new controller
-	c, err := controller.New("workflow-controller", mgr, controller.Options{Reconciler: r})
+	c, err := controller.New(controllerName, mgr, controller.Options{Reconciler: r})
 	if err != nil {
 		return err
 	}
 
 	// Watch for changes to primary resource Workflow
-	err = c.Watch(&source.Kind{Type: &lyrav1alpha1.Workflow{}}, &handler.EnqueueRequestForObject{})
+	err = c.Watch(&source.Kind{Type: runtimeObject}, &handler.EnqueueRequestForObject{})
 	if err != nil {
 		return err
 	}
 
+	// TODO markf not working.  Trying here to register a secondary object i'm interested in here
+	// as per the following comment from operator sdk sample
+	// (but not getting events for the seconday object)
 	// TODO(user): Modify this to be the types you create that are owned by the primary resource
 	// Watch for changes to secondary resource Pods and requeue the owner Workflow
-	err = c.Watch(&source.Kind{Type: &corev1.Pod{}}, &handler.EnqueueRequestForOwner{
+	err = c.Watch(&source.Kind{Type: relatedObject}, &handler.EnqueueRequestForOwner{
 		IsController: true,
-		OwnerType:    &lyrav1alpha1.Workflow{},
+		OwnerType:    runtimeObject,
 	})
 	if err != nil {
 		return err
