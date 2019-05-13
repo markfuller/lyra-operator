@@ -7,7 +7,7 @@ spec:
   names:
     kind: UserScript
     listKind: UserScriptList
-    plural: userscripts
+    plural: userscriptsp
     singular: userscript
     shortNames:
     - us

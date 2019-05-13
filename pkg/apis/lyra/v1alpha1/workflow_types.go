@@ -135,6 +135,8 @@ type LoadBalancerList struct {
 // UserScriptSpec .
 type UserScriptSpec struct {
 	ScriptName string `json:"scriptName"`
+	GitRepo    string `json:"gitRepo"`
+	GitBranch  string `json:"gitBranch"`
 }
 
 // UserScriptStatus .

@@ -83,3 +83,41 @@ func (r *ReconcileUserScript) Reconcile(request reconcile.Request) (reconcile.Re
 
 	return reconcile.Result{}, nil
 }
+
+func handleScript(s lyrav1alpha1.UserScriptSpec) error {
+	var err error
+	if s.GitRepo != "" {
+		err = runCommand("pwd")
+		if err != nil {
+			return err
+		}
+		err = runCommand("git")
+		if err != nil {
+			return err
+		}
+		err = runCommand("git", "--help")
+		if err != nil {
+			return err
+		}
+		err = runCommand("git", "clone", s.GitRepo)
+		if err != nil {
+			return err
+		}
+		if s.GitBranch != "" {
+			err = runCommand("git", "checkout", s.GitBranch)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return runCommand(s.ScriptName)
+}
+
+func runCommand(s string, args ...string) error {
+	var log = logf.Log.WithName("scripthandler")
+	cmd := exec.Command(s, args...)
+	output, err := cmd.Output()
+	info := fmt.Sprintf("output from script (%v) is \n%s\n", s, output)
+	log.Info(info)
+	return err
+}

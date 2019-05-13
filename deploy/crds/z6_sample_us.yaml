@@ -3,6 +3,8 @@ kind: UserScript
 metadata:
   name: our-us
 spec:
-  scriptName: ./sayHello.sh
+  scriptUrl: https://gist.githubusercontent.com/markfuller/7952bef98dc43a8940a8d4eb2cc75dd4/raw/05e1c9f9317a1673350c6e46ab41e9143c6d0ecb/sayHello.sh
+  gitRepo: https://raw.githubusercontent.com/markfuller/k8s-play
+  gitBranch: chaff
+  # scriptName: ./sayHello.sh
   # scriptName: ls
-
